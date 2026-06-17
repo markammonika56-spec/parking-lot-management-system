@@ -1,0 +1,96 @@
+class Vehicle {
+    String vehicleId;
+    String vehicleType;
+    long entryTime;
+
+    Vehicle(String vehicleId, String vehicleType) {
+        this.vehicleId = vehicleId;
+        this.vehicleType = vehicleType;
+        this.entryTime = System.currentTimeMillis();
+    }
+}
+
+class ParkingLot {
+    private Vehicle[] slots;
+
+    ParkingLot(int totalSlots) {
+        slots = new Vehicle[totalSlots];
+    }
+
+    public void parkVehicle(Vehicle vehicle) {
+        for (int i = 0; i < slots.length; i++) {
+            if (slots[i] == null) {
+                slots[i] = vehicle;
+                System.out.println(vehicle.vehicleType + " "
+                        + vehicle.vehicleId + " parked in Slot "
+                        + (i + 1));
+                return;
+            }
+        }
+        System.out.println("Parking Lot Full!");
+    }
+
+    public void removeVehicle(String vehicleId) {
+        for (int i = 0; i < slots.length; i++) {
+            if (slots[i] != null &&
+                    slots[i].vehicleId.equals(vehicleId)) {
+
+                long exitTime = System.currentTimeMillis();
+
+                long durationMinutes =
+                        (exitTime - slots[i].entryTime) / 60000;
+
+                double fee = Math.max(10, durationMinutes * 2);
+
+                System.out.println("Vehicle "
+                        + vehicleId + " removed");
+                System.out.println("Parking Fee: ₹" + fee);
+
+                slots[i] = null;
+                return;
+            }
+        }
+        System.out.println("Vehicle Not Found!");
+    }
+
+    public void displaySlots() {
+        int occupied = 0;
+
+        for (Vehicle v : slots) {
+            if (v != null)
+                occupied++;
+        }
+
+        int available = slots.length - occupied;
+
+        System.out.println("\nTotal Slots: "
+                + slots.length);
+        System.out.println("Occupied Slots: "
+                + occupied);
+        System.out.println("Available Slots: "
+                + available);
+    }
+}
+
+public class ParkingLotManagementSystem {
+    public static void main(String[] args) {
+
+        ParkingLot parkingLot =
+                new ParkingLot(10);
+
+        Vehicle bike =
+                new Vehicle("Bike-101", "Bike");
+
+        Vehicle car =
+                new Vehicle("Car-202", "Car");
+
+        parkingLot.parkVehicle(bike);
+        parkingLot.parkVehicle(car);
+
+        parkingLot.displaySlots();
+
+        parkingLot.removeVehicle("Bike-101");
+
+        parkingLot.displaySlots();
+    }
+} 
