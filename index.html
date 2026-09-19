@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ParkEase | Parking Slot Management</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    color:#172033;
+}
+
+/* HEADER */
+.header{
+    background:linear-gradient(135deg,#111827,#2563eb);
+    color:white;
+    padding:28px 18px;
+}
+
+.header-content{
+    max-width:1150px;
+    margin:auto;
+}
+
+.logo{
+    font-size:28px;
+    font-weight:800;
+}
+
+.subtitle{
+    margin-top:6px;
+    opacity:.85;
+    font-size:14px;
+}
+
+/* CONTAINER */
+.container{
+    max-width:1150px;
+    margin:auto;
+    padding:25px 15px;
+}
+
+/* DASHBOARD */
+.dashboard{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:16px;
+    box-shadow:0 5px 18px rgba(0,0,0,.07);
+}
+
+.card-title{
+    color:#6b7280;
+    font-size:13px;
+    margin-bottom:9px;
+}
+
+.card-number{
+    font-size:28px;
+    font-weight:800;
+}
+
+/* SECTION */
+.section{
+    background:white;
+    padding:22px;
+    border-radius:16px;
+    margin-bottom:25px;
+    box-shadow:0 5px 18px rgba(0,0,0,.06);
+}
+
+.section-title{
+    font-size:20px;
+    margin-bottom:18px;
+}
+
+/* FORM */
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+}
+
+.field label{
+    display:block;
+    font-size:13px;
+    font-weight:bold;
+    margin-bottom:7px;
+}
+
+.field input,
+.field select{
+    width:100%;
+    padding:12px;
+    border:1px solid #d1d5db;
+    border-radius:9px;
+    outline:none;
+    background:white;
+}
+
+.field input:focus,
+.field select:focus{
+    border-color:#2563eb;
+}
+
+.btn{
+    border:none;
+    padding:12px 20px;
+    border-radius:9px;
+    cursor:pointer;
+    font-weight:bold;
+    margin-top:18px;
+}
+
+.primary{
+    background:#2563eb;
+    color:white;
+}
+
+.primary:hover{
+    background:#1d4ed8;
+}
+
+/* SEARCH */
+.search{
+    width:100%;
+    padding:13px;
+    border:1px solid #d1d5db;
+    border-radius:9px;
+    margin-bottom:20px;
+    outline:none;
+}
+
+/* SLOTS */
+.slot-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+.slot{
+    border-radius:14px;
+    padding:18px;
+    text-align:center;
+    border:2px solid;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.slot:hover{
+    transform:translateY(-3px);
+}
+
+.available{
+    background:#ecfdf5;
+    border-color:#22c55e;
+}
+
+.occupied{
+    background:#fef2f2;
+    border-color:#ef4444;
+}
+
+.slot-number{
+    font-size:21px;
+    font-weight:800;
+    margin-bottom:8px;
+}
+
+.slot-status{
+    font-size:13px;
+    font-weight:bold;
+}
+
+.slot-info{
+    margin-top:9px;
+    font-size:12px;
+    color:#4b5563;
+}
+
+/* TABLE */
+.table-container{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:800px;
+}
+
+th,td{
+    padding:13px;
+    border-bottom:1px solid #e5e7eb;
+    text-align:left;
+}
+
+th{
+    background:#f3f4f6;
+    font-size:13px;
+}
+
+.exit-btn{
+    background:#fee2e2;
+    color:#b91c1c;
+    border:none;
+    padding:7px 11px;
+    border-radius:7px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+/* BADGES */
+.badge{
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.badge-car{
+    background:#dbeafe;
+    color:#1d4ed8;
+}
+
+.badge-bike{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.badge-auto{
+    background:#ede9fe;
+    color:#6d28d9;
+}
+
+/* EMPTY */
+.empty{
+    text-align:center;
+    padding:25px;
+    color:#6b7280;
+}
+
+/* FOOTER */
+.footer{
+    text-align:center;
+    padding:25px;
+    color:#6b7280;
+    font-size:13px;
+}
+
+/* MOBILE */
+@media(max-width:900px){
+
+    .dashboard{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .form-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .slot-grid{
+        grid-template-columns:repeat(3,1fr);
+    }
+}
+
+@media(max-width:600px){
+
+    .header{
+        padding:23px 15px;
+    }
+
+    .logo{
+        font-size:23px;
+    }
+
+    .dashboard{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .slot-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .card{
+        padding:15px;
+    }
+
+    .card-number{
+        font-size:23px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <div class="header-content">
+        <div class="logo">🚗 ParkEase</div>
+        <div class="subtitle">
+            Smart Parking Slot Management System
+        </div>
+    </div>
+</header>
+
+
+<main class="container">
+
+<!-- DASHBOARD -->
+
+<div class="dashboard">
+
+    <div class="card">
+        <div class="card-title">TOTAL SLOTS</div>
+        <div class="card-number" id="totalSlots">12</div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">AVAILABLE</div>
+        <div class="card-number" id="availableSlots">12</div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">OCCUPIED</div>
+        <div class="card-number" id="occupiedSlots">0</div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">TOTAL EARNINGS</div>
+        <div class="card-number" id="earnings">₹0</div>
+    </div>
+
+</div>
+
+
+<!-- PARK VEHICLE -->
+
+<section class="section">
+
+<h2 class="section-title">➕ Park a Vehicle</h2>
+
+<div class="form-grid">
+
+    <div class="field">
+        <label>Vehicle Number</label>
+        <input
+            type="text"
+            id="vehicleNumber"
+            placeholder="e.g. CG07AB1234"
+        >
+    </div>
+
+    <div class="field">
+        <label>Owner Name</label>
+        <input
+            type="text"
+            id="ownerName"
+            placeholder="Enter owner name"
+        >
+    </div>
+
+    <div class="field">
+        <label>Vehicle Type</label>
+
+        <select id="vehicleType">
+
+            <option value="">Select vehicle</option>
+            <option value="Car">🚗 Car</option>
+            <option value="Bike">🏍️ Bike</option>
+            <option value="Auto">🛺 Auto</option>
+
+        </select>
+
+    </div>
+
+</div>
+
+<button class="btn primary" onclick="parkVehicle()">
+    Park Vehicle
+</button>
+
+</section>
+
+
+<!-- PARKING SLOTS -->
+
+<section class="section">
+
+<h2 class="section-title">🅿️ Parking Slots</h2>
+
+<div class="slot-grid" id="slotGrid"></div>
+
+</section>
+
+
+<!-- ACTIVE VEHICLES -->
+
+<section class="section">
+
+<h2 class="section-title">🚘 Active Vehicles</h2>
+
+<input
+    type="text"
+    id="search"
+    class="search"
+    placeholder="🔍 Search vehicle number or owner..."
+    oninput="displayVehicles()"
+>
+
+<div class="table-container">
+
+<table>
+
+<thead>
+
+<tr>
+    <th>Slot</th>
+    <th>Vehicle</th>
+    <th>Owner</th>
+    <th>Type</th>
+    <th>Entry Time</th>
+    <th>Action</th>
+</tr>
+
+</thead>
+
+<tbody id="vehicleTable"></tbody>
+
+</table>
+
+<div id="emptyMessage" class="empty">
+    No vehicles currently parked.
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+
+<footer class="footer">
+    ParkEase • Parking Slot Management System<br>
+    Built with HTML, CSS & JavaScript
+</footer>
+
+
+<script>
+
+/* DATA */
+
+const TOTAL_SLOTS = 12;
+
+let parkingData = [];
+
+let earnings = Number(
+    localStorage.getItem("parkingEarnings")
+) || 0;
+
+
+/* LOAD DATA */
+
+try{
+
+    parkingData =
+        JSON.parse(
+            localStorage.getItem("parkingData")
+        ) || [];
+
+}catch(error){
+
+    parkingData = [];
+
+}
+
+
+/* SAVE DATA */
+
+function saveData(){
+
+    localStorage.setItem(
+        "parkingData",
+        JSON.stringify(parkingData)
+    );
+
+    localStorage.setItem(
+        "parkingEarnings",
+        earnings
+    );
+
+}
+
+
+/* DISPLAY SLOTS */
+
+function displaySlots(){
+
+    const grid =
+        document.getElementById("slotGrid");
+
+    grid.innerHTML = "";
+
+
+    for(let i=1;i<=TOTAL_SLOTS;i++){
+
+        const vehicle =
+            parkingData.find(
+                item => item.slot === i
+            );
+
+
+        const div =
+            document.createElement("div");
+
+
+        if(vehicle){
+
+            div.className = "slot occupied";
+
+            div.innerHTML = `
+
+                <div class="slot-number">
+                    SLOT ${i}
+                </div>
+
+                <div class="slot-status">
+                    🔴 OCCUPIED
+                </div>
+
+                <div class="slot-info">
+                    ${vehicle.vehicleNumber}<br>
+                    ${vehicle.owner}
+                </div>
+
+            `;
+
+        }else{
+
+            div.className = "slot available";
+
+            div.innerHTML = `
+
+                <div class="slot-number">
+                    SLOT ${i}
+                </div>
+
+                <div class="slot-status">
+                    🟢 AVAILABLE
+                </div>
+
+                <div class="slot-info">
+                    Ready for parking
+                </div>
+
+            `;
+
+        }
+
+
+        grid.appendChild(div);
+
+    }
+
+}
+
+
+/* PARK VEHICLE */
+
+function parkVehicle(){
+
+    const vehicleNumber =
+        document
+        .getElementById("vehicleNumber")
+        .value
+        .trim()
+        .toUpperCase();
+
+    const owner =
+        document
+        .getElementById("ownerName")
+        .value
+        .trim();
+
+    const type =
+        document
+        .getElementById("vehicleType")
+        .value;
+
+
+    if(
+        vehicleNumber === "" ||
+        owner === "" ||
+        type === ""
+    ){
+
+        alert(
+            "Please enter all vehicle details."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        parkingData.some(
+            item =>
+            item.vehicleNumber === vehicleNumber
+        )
+    ){
+
+        alert(
+            "This vehicle is already parked."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        parkingData.length >= TOTAL_SLOTS
+    ){
+
+        alert(
+            "All parking slots are occupied."
+        );
+
+        return;
+
+    }
+
+
+    /* FIND FIRST AVAILABLE SLOT */
+
+    let slot = 1;
+
+    while(
+        parkingData.some(
+            item => item.slot === slot
+        )
+    ){
+
+        slot++;
+
+    }
+
+
+    const vehicle = {
+
+        slot: slot,
+
+        vehicleNumber:
+            vehicleNumber,
+
+        owner:
+            owner,
+
+        type:
+            type,
+
+        entryTime:
+            new Date().toLocaleString()
+
+    };
+
+
+    parkingData.push(vehicle);
+
+
+    saveData();
+
+    clearForm();
+
+    refresh();
+
+
+    alert(
+        "✅ Vehicle parked successfully!\nSlot: " +
+        slot
+    );
+
+}
+
+
+/* CLEAR FORM */
+
+function clearForm(){
+
+    document.getElementById(
+        "vehicleNumber"
+    ).value = "";
+
+    document.getElementById(
+        "ownerName"
+    ).value = "";
+
+    document.getElementById(
+        "vehicleType"
+    ).value = "";
+
+}
+
+
+/* DISPLAY VEHICLES */
+
+function displayVehicles(){
+
+    const table =
+        document.getElementById(
+            "vehicleTable"
+        );
+
+    const search =
+        document.getElementById(
+            "search"
+        ).value.toLowerCase();
+
+
+    table.innerHTML = "";
+
+
+    const filtered =
+        parkingData.filter(vehicle =>
+
+            vehicle.vehicleNumber
+            .toLowerCase()
+            .includes(search)
+
+            ||
+
+            vehicle.owner
+            .toLowerCase()
+            .includes(search)
+
+        );
+
+
+    document.getElementById(
+        "emptyMessage"
+    ).style.display =
+        filtered.length === 0
+        ? "block"
+        : "none";
+
+
+    filtered.forEach(vehicle => {
+
+        const index =
+            parkingData.indexOf(vehicle);
+
+
+        let badgeClass =
+            "badge-car";
+
+        if(vehicle.type === "Bike"){
+            badgeClass = "badge-bike";
+        }
+
+        if(vehicle.type === "Auto"){
+            badgeClass = "badge-auto";
+        }
+
+
+        const row =
+            document.createElement("tr");
+
+
+        row.innerHTML = `
+
+            <td>
+                <b>Slot ${vehicle.slot}</b>
+            </td>
+
+            <td>
+                ${vehicle.vehicleNumber}
+            </td>
+
+            <td>
+                ${vehicle.owner}
+            </td>
+
+            <td>
+                <span class="badge ${badgeClass}">
+                    ${vehicle.type}
+                </span>
+            </td>
+
+            <td>
+                ${vehicle.entryTime}
+            </td>
+
+            <td>
+
+                <button
+                    class="exit-btn"
+                    onclick="exitVehicle(${index})">
+
+                    Vehicle Exit
+
+                </button>
+
+            </td>
+
+        `;
+
+
+        table.appendChild(row);
+
+    });
+
+}
+
+
+/* VEHICLE EXIT */
+
+function exitVehicle(index){
+
+    const vehicle =
+        parkingData[index];
+
+
+    if(!vehicle){
+        return;
+    }
+
+
+    /*
+       Demo parking fee:
+       Car = ₹50
+       Bike = ₹30
+       Auto = ₹40
+    */
+
+    let fee = 50;
+
+
+    if(vehicle.type === "Bike"){
+        fee = 30;
+    }
+
+    if(vehicle.type === "Auto"){
+        fee = 40;
+    }
+
+
+    const confirmExit =
+        confirm(
+            "Vehicle: " +
+            vehicle.vehicleNumber +
+            "\nSlot: " +
+            vehicle.slot +
+            "\nParking Fee: ₹" +
+            fee +
+            "\n\nConfirm vehicle exit?"
+        );
+
+
+    if(!confirmExit){
+        return;
+    }
+
+
+    earnings += fee;
+
+
+    parkingData.splice(
+        index,
+        1
+    );
+
+
+    saveData();
+
+    refresh();
+
+
+    alert(
+        "✅ Vehicle exited successfully!\n" +
+        "Parking Fee: ₹" + fee
+    );
+
+}
+
+
+/* UPDATE DASHBOARD */
+
+function updateDashboard(){
+
+    const occupied =
+        parkingData.length;
+
+
+    const available =
+        TOTAL_SLOTS - occupied;
+
+
+    document.getElementById(
+        "totalSlots"
+    ).textContent =
+        TOTAL_SLOTS;
+
+
+    document.getElementById(
+        "availableSlots"
+    ).textContent =
+        available;
+
+
+    document.getElementById(
+        "occupiedSlots"
+    ).textContent =
+        occupied;
+
+
+    document.getElementById(
+        "earnings"
+    ).textContent =
+        "₹" + earnings;
+
+}
+
+
+/* REFRESH EVERYTHING */
+
+function refresh(){
+
+    displaySlots();
+
+    displayVehicles();
+
+    updateDashboard();
+
+}
+
+
+/* START */
+
+refresh();
+
+</script>
+
+</body>
+</html>
